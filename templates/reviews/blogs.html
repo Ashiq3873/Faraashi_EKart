@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Review Blogs - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="review-page-header">
+        <a href="{{ url_for('reviews_hub') }}" class="review-back-link"><i class="fa-solid fa-arrow-left"></i> Back to Reviews</a>
+        <h1>Blog Reviews</h1>
+        <p>Select an article from our journal and tell us what you think.</p>
+    </div>
+
+    {% if blogs %}
+    <div class="review-item-grid">
+        {% for blog in blogs %}
+        <article class="review-item-card">
+            <div class="review-item-image blog-tone">
+                <img src="{{ blog.image_url if blog.image_url else 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=600' }}"
+                     alt="{{ blog.title }}"
+                     onerror="this.src='https://via.placeholder.com/320x220?text=Blog'">
+            </div>
+            <div class="review-item-body">
+                <span class="review-item-tag">{{ blog.category }}</span>
+                <h3>{{ blog.title }}</h3>
+                <p class="review-item-meta">By {{ blog.author }} · {{ blog.created_at }}</p>
+                <a href="{{ url_for('write_review', review_type='blog', target_id=blog._id) }}" class="btn btn-success btn-block btn-sm">
+                    <i class="fa-solid fa-pen-to-square"></i> Write Review
+                </a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-newspaper"></i></div>
+        <h3>No blog articles yet</h3>
+        <p>Journal articles will appear here when published.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

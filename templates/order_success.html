@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block title %}Order Confirmed - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="success-container">
+        
+        <!-- Hero Confirmation Section -->
+        <div class="success-hero">
+            <div class="success-icon-wrap">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h1>Order Confirmed!</h1>
+            <p>Thank you for shopping with us. Your order has been placed successfully and is being processed.</p>
+            
+            <div class="success-download-alert">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Generating your PDF invoice...</span>
+            </div>
+        </div>
+
+        <!-- Premium Digital Invoice -->
+        <div class="invoice-sheet">
+            <div class="invoice-inner">
+                
+                <!-- Invoice Header -->
+                <div class="invoice-header">
+                    <div class="invoice-brand">
+                        <div class="brand-logo">
+                            <span class="brand-icon"><i class="fa-solid fa-bag-shopping"></i></span>
+                            <span>Faraashi<span class="brand-accent">.Ekart</span></span>
+                        </div>
+                        <p>
+                            Karaikudi, Tamil Nadu, India<br/>
+                            Email: mohamedashiqb12@gmail.com<br/>
+                            Phone: +91 6385658696
+                        </p>
+                    </div>
+                    <div class="invoice-meta">
+                        <h2>INVOICE</h2>
+                        <p><strong>Order ID:</strong> #{{ order._id.split('.')[0] }}</p>
+                        <p><strong>Date:</strong> {{ order.created_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+                        <p><strong>Payment Status:</strong> Cash on Delivery</p>
+                    </div>
+                </div>
+
+                <!-- Billing & Shipping Details Grid -->
+                <div class="invoice-details-grid">
+                    <div class="invoice-details-card">
+                        <h4>Billed To</h4>
+                        <p><strong>Name:</strong> {{ order.customer_name }}</p>
+                        <p><strong>Email:</strong> {{ order.email }}</p>
+                        <p><strong>Phone:</strong> {{ order.phone }}</p>
+                    </div>
+                    <div class="invoice-details-card">
+                        <h4>Shipping To</h4>
+                        <p><strong>Address:</strong></p>
+                        <p>{{ order.address }}</p>
+                        <p style="margin-top: 8px; font-size: 0.8125rem; color: var(--color-text-secondary);">
+                            <i class="fa-solid fa-truck-fast"></i> Expected Delivery: 3-5 Business Days
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Invoice Items Table -->
+                <div class="invoice-table-wrap">
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th class="text-right">Price</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order['items'] %}
+                            <tr>
+                                <td>
+                                    <div class="invoice-item-product">
+                                        {% if item.image_url %}
+                                        <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                                        {% endif %}
+                                        <div>
+                                            <span class="invoice-item-name">{{ item.name }}</span>
+                                            <div style="font-size: 0.75rem; color: var(--color-text-secondary);">
+                                                Category: {{ item.category }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-right">₹{{ item.price|round(2) }}</td>
+                                <td class="text-center">{{ item.qty }}</td>
+                                <td class="text-right">₹{{ (item.price * item.qty)|round(2) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Totals Breakdown -->
+                <div class="invoice-totals-row">
+                    <table class="invoice-totals-table">
+                        <tr>
+                            <td>Subtotal:</td>
+                            <td class="text-right">₹{{ order.total|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Delivery:</td>
+                            <td class="text-right">
+                                {% if order.total >= 999 %}
+                                <span style="color: var(--color-success); font-weight: 600;">FREE</span>
+                                {% else %}
+                                ₹49.00
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="grand-total">
+                            <td>Grand Total:</td>
+                            <td class="text-right">
+                                {% if order.total >= 999 %}
+                                ₹{{ order.total|round(2) }}
+                                {% else %}
+                                ₹{{ (order.total + 49)|round(2) }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- Footer Message -->
+            <div class="invoice-footer-thanks">
+                <h5>Thank you for your business!</h5>
+                <p>If you have any questions about this invoice, contact mohamedashiqb12@gmail.com or call +91 6385658696.</p>
+            </div>
+        </div>
+
+        <!-- Success Page Actions -->
+        <div class="success-actions">
+            <a href="{{ url_for('products') }}" class="btn btn-outline">
+                <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+            </a>
+            <button onclick="window.print()" class="btn btn-outline">
+                <i class="fa-solid fa-print"></i> Print Invoice
+            </button>
+            <a href="{{ url_for('download_invoice', order_id=order._id) }}" class="btn btn-primary">
+                <i class="fa-solid fa-download"></i> Download PDF
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Auto download trigger script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Trigger auto-download after a short delay for smooth UI feedback
+        setTimeout(function() {
+            const alertEl = document.querySelector('.success-download-alert');
+            if (alertEl) {
+                alertEl.style.background = '#ecfdf5';
+                alertEl.style.borderColor = '#6ee7b7';
+                alertEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>Download started! Check your downloads folder.</span>';
+            }
+            // Trigger PDF invoice download
+            window.location.href = "{{ url_for('download_invoice', order_id=order._id) }}";
+        }, 1500);
+    });
+</script>
+{% endblock %}

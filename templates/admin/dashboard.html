@@ -1,0 +1,418 @@
+{% extends 'base.html' %}
+{% block title %}Admin Control Panel - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container admin-dashboard">
+    <header class="admin-topbar">
+        <div class="admin-topbar-main">
+            <span class="admin-badge"><i class="fa-solid fa-shield-halved"></i> Administration</span>
+            <h1>Store Control Panel</h1>
+            <p>Monitor inventory, manage catalog content, and process customer orders.</p>
+        </div>
+        <div class="admin-topbar-actions">
+            <div class="admin-meta-chip">
+                <i class="fa-regular fa-clock"></i>
+                <span>{{ now|format_datetime }}</span>
+            </div>
+            <a href="/logout" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+        </div>
+    </header>
+
+    <section class="admin-stats">
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon accent"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ products|length }}</div>
+                <div class="admin-stat-label">Total Products</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ low_stock_count }}</div>
+                <div class="admin-stat-label">Low Stock (≤ 5)</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon danger"><i class="fa-solid fa-ban"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ out_of_stock_count }}</div>
+                <div class="admin-stat-label">Out of Stock</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon info"><i class="fa-solid fa-truck-fast"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ pending_orders }}</div>
+                <div class="admin-stat-label">Active Orders</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon success"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">₹{{ total_revenue|round(0)|int }}</div>
+                <div class="admin-stat-label">Total Revenue</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon neutral"><i class="fa-solid fa-newspaper"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ blogs|length }}</div>
+                <div class="admin-stat-label">Published Blogs</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon accent"><i class="fa-solid fa-robot"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ reviews|length }}</div>
+                <div class="admin-stat-label">AI Review Replies</div>
+            </div>
+        </article>
+    </section>
+
+    <div class="admin-grid-2">
+        <section class="admin-panel">
+            <div class="admin-panel-header">
+                <div>
+                    <h2><i class="fa-solid fa-circle-plus"></i> Add Product</h2>
+                    <p>Register a new item in the product catalog.</p>
+                </div>
+            </div>
+            <div class="admin-panel-body">
+                <form method="POST" action="/admin/add_product" enctype="multipart/form-data" class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Product Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Enter product name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select" required>
+                                <option value="" disabled selected>Select category</option>
+                                <option value="Food">Food</option>
+                                <option value="Watch">Watch</option>
+                                <option value="Toys">Toys</option>
+                                <option value="Dress">Dress</option>
+                                <option value="Cosmetics">Cosmetics</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Jewelry">Jewelry</option>
+                                <option value="Footwear">Footwear</option>
+                                <option value="Home & Living">Home & Living</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Books">Books</option>
+                                <option value="Accessories">Accessories</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Selling Price (₹)</label>
+                            <input type="number" name="price" class="form-control" placeholder="0.00" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Compare Price (₹)</label>
+                            <input type="number" name="compare_price" class="form-control" placeholder="Optional" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Product description for the storefront" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Initial Stock</label>
+                            <input type="number" name="stock" class="form-control" value="10" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Product Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Save Product</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="admin-panel">
+            <div class="admin-panel-header">
+                <div>
+                    <h2><i class="fa-solid fa-pen-nib"></i> Publish Blog</h2>
+                    <p>Create editorial content for the store blog.</p>
+                </div>
+            </div>
+            <div class="admin-panel-body">
+                <form method="POST" action="/admin/add_blog" enctype="multipart/form-data" class="admin-form">
+                    <div class="form-group">
+                        <label class="form-label">Blog Title</label>
+                        <input type="text" name="title" class="form-control" placeholder="Article headline" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select" required>
+                            <option value="" disabled selected>Select category</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Lifestyle">Lifestyle</option>
+                            <option value="Food & Cooking">Food & Cooking</option>
+                            <option value="Health & Fitness">Health & Fitness</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Business">Business</option>
+                            <option value="Education">Education</option>
+                            <option value="Art & Culture">Art & Culture</option>
+                            <option value="Gaming">Gaming</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Content</label>
+                        <textarea name="content" class="form-control" rows="5" placeholder="Write the article body..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cover Image</label>
+                        <input type="file" name="blog_image" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> Publish Article</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <section class="admin-section">
+        <div class="admin-section-header">
+            <div>
+                <h2><i class="fa-solid fa-warehouse"></i> Inventory Management</h2>
+                <p>Live stock levels update automatically when customers complete purchases.</p>
+            </div>
+            <span class="admin-count-badge">{{ products|length }} items</span>
+        </div>
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock Level</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in products %}
+                    {% set stock = p.stock|default(0)|int %}
+                    <tr>
+                        <td>
+                            <div class="admin-product-cell">
+                                <img src="{{ p.image_url }}" alt="{{ p.name }}" onerror="this.src='https://via.placeholder.com/48x48?text=N/A'">
+                                <div>
+                                    <strong>{{ p.name }}</strong>
+                                    <span class="admin-product-id">ID: {{ p._id|string|truncate(12, True, '') }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="tag">{{ p.category }}</span></td>
+                        <td><strong>₹{{ p.price }}</strong></td>
+                        <td>
+                            <span class="stock-qty {% if stock <= 0 %}is-out{% elif stock <= 5 %}is-low{% else %}is-ok{% endif %}">{{ stock }}</span>
+                            <span class="stock-unit">units</span>
+                        </td>
+                        <td>
+                            {% if stock <= 0 %}
+                            <span class="stock-status-pill out">Out of Stock</span>
+                            {% elif stock <= 5 %}
+                            <span class="stock-status-pill low">Low Stock</span>
+                            {% else %}
+                            <span class="stock-status-pill ok">In Stock</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="/admin/delete_product/{{ p._id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this product from catalog?');">
+                                <i class="fa-solid fa-trash-can"></i> Remove
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not products %}
+                    <tr><td colspan="6" class="admin-empty-row">No products in inventory.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="admin-section">
+        <div class="admin-section-header">
+            <div>
+                <h2><i class="fa-solid fa-receipt"></i> Order Fulfillment</h2>
+                <p>Track shipment stages and manage completed deliveries.</p>
+            </div>
+            <span class="admin-count-badge">{{ orders|length }} orders</span>
+        </div>
+        <div class="admin-table-wrap">
+            <table class="admin-table admin-orders-table">
+                <thead>
+                    <tr>
+                        <th>Order Reference</th>
+                        <th>Customer</th>
+                        <th>Date & Amount</th>
+                        <th>Status</th>
+                        <th>Fulfillment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in orders %}
+                    {% set st = o.get('status', 'C') %}
+                    <tr>
+                        <td>
+                            <strong class="order-ref">#{{ o._id.split('.')[0] }}</strong>
+                            <details class="admin-order-details">
+                                <summary>View {{ o['items']|length }} item(s)</summary>
+                                <ul>
+                                    {% for item in o['items'] %}
+                                    <li>{{ item.name }} × {{ item.qty }} — ₹{{ item.price }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </details>
+                        </td>
+                        <td>
+                            <div class="admin-customer-cell">
+                                <strong>{{ o.customer_name }}</strong>
+                                <span>{{ o.phone }}</span>
+                                <span class="admin-address">{{ o.address }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="admin-order-date">{{ o['created_at']|format_datetime }}</span>
+                            <strong class="admin-order-total">₹{{ o.total|round(2) }}</strong>
+                        </td>
+                        <td>
+                            {% if st == 'C' %}
+                            <span class="order-status-pill confirmed">Confirmed</span>
+                            {% elif st == 'P' %}
+                            <span class="order-status-pill packed">Packed</span>
+                            {% elif st == 'S' %}
+                            <span class="order-status-pill shipped">Shipped</span>
+                            {% elif st == 'D' %}
+                            <span class="order-status-pill delivered">Delivered</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if st == 'D' %}
+                            <a href="{{ url_for('admin_delete_order', order_id=o._id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this delivered order record?');">
+                                <i class="fa-solid fa-trash-can"></i> Delete
+                            </a>
+                            {% else %}
+                            <div class="status-btn-group">
+                                <a href="/admin/update_order_status/{{ o._id }}/C" class="status-letter-btn {% if st == 'C' %}active{% endif %}" title="Confirmed">C</a>
+                                <a href="/admin/update_order_status/{{ o._id }}/P" class="status-letter-btn {% if st == 'P' %}active{% endif %}" title="Packed">P</a>
+                                <a href="/admin/update_order_status/{{ o._id }}/S" class="status-letter-btn {% if st == 'S' %}active{% endif %}" title="Shipped">S</a>
+                                <a href="/admin/update_order_status/{{ o._id }}/D" class="status-letter-btn {% if st == 'D' %}active{% endif %}" title="Delivered">D</a>
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not orders %}
+                    <tr><td colspan="5" class="admin-empty-row">No customer orders yet.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="admin-section" id="customer-reviews">
+        <div class="admin-section-header">
+            <div>
+                <h2><i class="fa-solid fa-comments"></i> Customer Reviews</h2>
+                <p>AI automatically replies to each review based on customer expression and emails the user instantly.</p>
+            </div>
+            <span class="admin-count-badge">{{ reviews|length }} total · AI handled</span>
+        </div>
+
+        {% if reviews %}
+        <div class="admin-reviews-list">
+            {% for r in reviews %}
+            <article class="admin-review-card {% if r.get('status') == 'replied' %}is-replied{% else %}is-pending{% endif %}">
+                <div class="admin-review-header">
+                    <div>
+                        <span class="review-type-badge {{ r.review_type }}">{{ r.review_type|title }}</span>
+                        <h3>{{ r.target_name }}</h3>
+                        <p class="admin-review-meta">
+                            <strong>{{ r.user_name }}</strong> · {{ r.user_email }} · {{ r.created_at|format_datetime }}
+                        </p>
+                    </div>
+                    {% if r.get('status') == 'replied' %}
+                    <span class="review-status-pill replied"><i class="fa-solid fa-robot"></i> AI Replied</span>
+                    {% else %}
+                    <span class="review-status-pill pending">Email Pending</span>
+                    {% endif %}
+                </div>
+
+                <div class="admin-review-expression expr-{{ r.expression }}">
+                    <i class="fa-solid fa-face-smile"></i> {{ r.expression_label }}
+                </div>
+
+                <div class="admin-review-text">
+                    <strong>Customer Review</strong>
+                    <p>{{ r.review_text }}</p>
+                </div>
+
+                <div class="admin-review-reply-box">
+                    <strong><i class="fa-solid fa-robot"></i> AI Auto-Reply {% if r.get('email_sent') %}(emailed to customer){% else %}(email failed){% endif %}</strong>
+                    <p>{{ r.ai_reply or r.admin_reply or 'No reply generated.' }}</p>
+                    {% if r.replied_at %}
+                    <span class="admin-reply-time">Generated on {{ r.replied_at|format_datetime }}</span>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="admin-table-wrap">
+            <div class="admin-empty-row">No customer reviews received yet.</div>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="admin-section">
+        <div class="admin-section-header">
+            <div>
+                <h2><i class="fa-solid fa-book-open"></i> Blog Archive</h2>
+                <p>Manage published articles and editorial content.</p>
+            </div>
+            <span class="admin-count-badge">{{ blogs|length }} articles</span>
+        </div>
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Cover</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Published</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for blog in blogs %}
+                    <tr>
+                        <td><img src="{{ blog.image_url if blog.image_url else 'https://via.placeholder.com/44x44?text=N/A' }}" alt="{{ blog.title }}" onerror="this.src='https://via.placeholder.com/44x44?text=N/A'"></td>
+                        <td><strong>{{ blog.title }}</strong></td>
+                        <td><span class="tag">{{ blog.category }}</span></td>
+                        <td>{{ blog.created_at }}</td>
+                        <td>
+                            <a href="/admin/delete_blog/{{ blog._id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this blog article?');">
+                                <i class="fa-solid fa-trash-can"></i> Remove
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not blogs %}
+                    <tr><td colspan="5" class="admin-empty-row">No blog articles published.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

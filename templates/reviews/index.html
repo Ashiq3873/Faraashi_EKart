@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Reviews - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="review-hero">
+        <span class="review-hero-badge"><i class="fa-solid fa-star"></i> Customer Voice</span>
+        <h1>Share Your Experience</h1>
+        <p>Tell us what you think about our products or journal articles. Your feedback helps us serve you better.</p>
+    </div>
+
+    <div class="review-type-grid">
+        <a href="{{ url_for('review_products') }}" class="review-type-card product-card-tone">
+            <div class="review-type-icon"><i class="fa-solid fa-box-open"></i></div>
+            <h2>Product Reviews</h2>
+            <p>Browse all products and write a detailed review about your purchase experience.</p>
+            <span class="review-type-cta">Review Products <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+
+        <a href="{{ url_for('review_blogs') }}" class="review-type-card blog-card-tone">
+            <div class="review-type-icon"><i class="fa-solid fa-newspaper"></i></div>
+            <h2>Blog Reviews</h2>
+            <p>Read our journal articles and share your thoughts on the content you enjoyed.</p>
+            <span class="review-type-cta">Review Blogs <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+    </div>
+
+    <div class="review-info-panel">
+        <div class="review-info-item">
+            <i class="fa-solid fa-user-check"></i>
+            <div>
+                <strong>Signed in as {{ session['user']['username'] }}</strong>
+                <span>Reviews are linked to your account for follow-up responses.</span>
+            </div>
+        </div>
+        <div class="review-info-item">
+            <i class="fa-solid fa-robot"></i>
+            <div>
+                <strong>Instant AI response</strong>
+                <span>Our AI reads your expression and review, then emails a personalized reply to {{ session['user']['email'] }} automatically.</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

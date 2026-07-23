@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Shop All Products - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Shop All Products</h1>
+        <p>{% if selected_category %}Showing <strong>{{ selected_category }}</strong> · {% endif %}{{ products|length }} product{{ 's' if products|length != 1 else '' }} available</p>
+    </div>
+
+    {% if products %}
+    <div class="shop-layout">
+        <aside class="filters-panel">
+            <h6>Search</h6>
+            <input type="text" id="productSearchBox" class="form-control" placeholder="Search products...">
+
+            <hr class="filter-divider">
+            <h6>Category</h6>
+            {% for cat in products|map(attribute='category')|unique|list %}
+            <label class="filter-check">
+                <input type="checkbox" class="category-filter-check" value="{{ cat }}" {% if selected_category == cat %}checked{% endif %}>
+                {{ cat }}
+            </label>
+            {% endfor %}
+
+            <hr class="filter-divider">
+            <h6>Max Price: <span class="price-range-value" id="priceRangeValue">₹{{ products|map(attribute='price')|max }}</span></h6>
+            <input type="range" class="form-range" id="priceRangeInput"
+                   min="0" max="{{ products|map(attribute='price')|max }}" value="{{ products|map(attribute='price')|max }}">
+        </aside>
+
+        <div>
+            <div class="shop-toolbar">
+                <span class="text-muted" style="font-size: 0.875rem;">Showing {{ products|length }} products</span>
+                <select id="sortSelect" class="sort-select">
+                    <option value="default">Sort: Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name: A–Z</option>
+                </select>
+            </div>
+
+            <div class="product-grid" id="productGrid">
+                {% for p in products %}
+                <div class="product-card-col" data-category="{{ p.category }}" data-price="{{ p.price }}" data-name="{{ p.name|lower }}">
+                    <div class="product-card">
+                        <div class="product-image-wrap">
+                            {% if p.compare_price and p.compare_price > p.price %}
+                            <span class="product-badge">{{ (100 - (p.price / p.compare_price * 100))|round|int }}% OFF</span>
+                            {% endif %}
+                            <button class="wishlist-btn" data-product-id="{{ p._id }}" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                            <a href="/product/{{ p._id }}">
+                                <img src="{{ p.image_url }}" alt="{{ p.name }}" onerror="this.src='https://via.placeholder.com/400x400?text=No+Image'">
+                            </a>
+                        </div>
+                        <div class="product-body">
+                            <span class="product-category">{{ p.category }}</span>
+                            <h3 class="product-name"><a href="/product/{{ p._id }}" style="color:inherit;text-decoration:none;">{{ p.name }}</a></h3>
+                            <div class="product-price-row">
+                                <span class="price-current">₹{{ p.price }}</span>
+                                {% if p.compare_price and p.compare_price > p.price %}
+                                <span class="price-original">₹{{ p.compare_price }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="product-actions">
+                                <a href="/product/{{ p._id }}" class="btn btn-outline btn-block btn-sm">View Details</a>
+                                <a href="/add_to_cart/{{ p._id }}" class="btn btn-primary btn-block btn-sm add-to-cart"><i class="fa-solid fa-cart-plus"></i> Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div id="productsNoResults" style="display:none;" class="empty-state">
+                <div class="empty-state-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <h3>No products found</h3>
+                <p>Try adjusting your filters or search term.</p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-box-open"></i></div>
+        <h3>No products available</h3>
+        <p>Products will appear here once added by admin.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

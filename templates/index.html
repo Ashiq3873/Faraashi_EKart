@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% block title %}Faraashi-Ekart — Premium Online Shopping{% endblock %}
+{% block content %}
+
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fa-solid fa-sparkles"></i> New Collection 2026
+        </div>
+        <h1 class="hero-title">Discover Quality.<br>Shop with Confidence.</h1>
+        <p class="hero-subtitle">Curated products across fashion, electronics, home & more — delivered to your doorstep with premium service you can trust.</p>
+        <div class="hero-actions">
+            <a href="/products" class="btn btn-white btn-lg"><i class="fa-solid fa-bag-shopping"></i> Explore Shop</a>
+            <a href="/blogs" class="btn btn-outline-white btn-lg"><i class="fa-solid fa-book-open"></i> Read Journal</a>
+        </div>
+        <div class="hero-stats">
+            <div>
+                <div class="hero-stat-num">{{ products|length }}+</div>
+                <div class="hero-stat-label">Products</div>
+            </div>
+            <div>
+                <div class="hero-stat-num">{{ categories|length }}+</div>
+                <div class="hero-stat-label">Categories</div>
+            </div>
+            <div>
+                <div class="hero-stat-num">10K+</div>
+                <div class="hero-stat-label">Happy Customers</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-strip">
+    <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-truck-fast"></i></div>
+        <div>
+            <h5>Free Delivery</h5>
+            <p>On all orders above ₹999</p>
+        </div>
+    </div>
+    <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+            <h5>Quality Guarantee</h5>
+            <p>1-year warranty on products</p>
+        </div>
+    </div>
+    <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-rotate-left"></i></div>
+        <div>
+            <h5>Easy Returns</h5>
+            <p>30-day hassle-free returns</p>
+        </div>
+    </div>
+    <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
+        <div>
+            <h5>24/7 Support</h5>
+            <p>Always here to help you</p>
+        </div>
+    </div>
+</section>
+
+<div class="page-container">
+    <div class="section-header">
+        <span class="section-label">Browse</span>
+        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-desc">Find exactly what you're looking for across our curated collections</p>
+    </div>
+
+    {% if categories %}
+    <div class="category-grid">
+        {% for category in categories %}
+        <a href="/products?category={{ category }}" class="category-card">
+            <div class="category-icon">
+                {% if category == 'Food' %}<i class="fa-solid fa-utensils"></i>
+                {% elif category == 'Watch' %}<i class="fa-solid fa-stopwatch"></i>
+                {% elif category == 'Toys' %}<i class="fa-solid fa-gamepad"></i>
+                {% elif category == 'Dress' %}<i class="fa-solid fa-shirt"></i>
+                {% elif category == 'Cosmetics' %}<i class="fa-solid fa-wand-magic-sparkles"></i>
+                {% elif category == 'Electronics' %}<i class="fa-solid fa-mobile-screen"></i>
+                {% elif category == 'Jewelry' %}<i class="fa-solid fa-gem"></i>
+                {% elif category == 'Footwear' %}<i class="fa-solid fa-shoe-prints"></i>
+                {% elif category == 'Home & Living' %}<i class="fa-solid fa-couch"></i>
+                {% elif category == 'Sports' %}<i class="fa-solid fa-dumbbell"></i>
+                {% elif category == 'Books' %}<i class="fa-solid fa-book"></i>
+                {% else %}<i class="fa-solid fa-bag-shopping"></i>{% endif %}
+            </div>
+            <h5>{{ category }}</h5>
+            <span>View collection</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-grid-2"></i></div>
+        <h3>No categories yet</h3>
+        <p>Categories will appear once products are added.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="page-container" style="padding-top: 0;">
+    <div class="section-header">
+        <span class="section-label">Featured</span>
+        <h2 class="section-title">Trending Products</h2>
+        <p class="section-desc">Handpicked favorites loved by our customers</p>
+    </div>
+
+    {% if products %}
+    <div class="product-grid">
+        {% for p in products[:8] %}
+        <div class="product-card">
+            <div class="product-image-wrap">
+                {% if p.compare_price and p.compare_price > p.price %}
+                <span class="product-badge">{{ (100 - (p.price / p.compare_price * 100))|round|int }}% OFF</span>
+                {% endif %}
+                <button class="wishlist-btn" data-product-id="{{ p._id }}" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                <a href="/product/{{ p._id }}">
+                    <img src="{{ p.image_url }}" alt="{{ p.name }}" onerror="this.src='https://via.placeholder.com/400x400?text=No+Image'">
+                </a>
+            </div>
+            <div class="product-body">
+                <span class="product-category">{{ p.category }}</span>
+                <h3 class="product-name"><a href="/product/{{ p._id }}" style="color:inherit;text-decoration:none;">{{ p.name }}</a></h3>
+                <div class="product-rating">
+                    <span class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></span>
+                    <span class="count">(24)</span>
+                </div>
+                <div class="product-price-row">
+                    <span class="price-current">₹{{ p.price }}</span>
+                    {% if p.compare_price and p.compare_price > p.price %}
+                    <span class="price-original">₹{{ p.compare_price }}</span>
+                    {% endif %}
+                </div>
+                {% if p.compare_price and p.compare_price > p.price %}
+                <div class="price-save">Save ₹{{ (p.compare_price - p.price)|round|int }}</div>
+                {% endif %}
+                {% if p.stock is defined %}
+                    {% if p.stock > 5 %}
+                    <div class="stock-status stock-in"><i class="fa-solid fa-circle-check"></i> In Stock</div>
+                    {% elif p.stock > 0 %}
+                    <div class="stock-status stock-low"><i class="fa-solid fa-bolt"></i> Only {{ p.stock }} left</div>
+                    {% else %}
+                    <div class="stock-status stock-out"><i class="fa-solid fa-circle-xmark"></i> Out of Stock</div>
+                    {% endif %}
+                {% endif %}
+                <div class="product-actions">
+                    <a href="/product/{{ p._id }}" class="btn btn-outline btn-block btn-sm">View Details</a>
+                    <a href="/add_to_cart/{{ p._id }}" class="btn btn-primary btn-block btn-sm add-to-cart"><i class="fa-solid fa-cart-plus"></i> Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if products|length > 8 %}
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="/products" class="btn btn-outline btn-lg">View All Products <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-box-open"></i></div>
+        <h3>No products yet</h3>
+        <p>Check back soon for amazing deals.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="page-container" style="padding-top: 0;">
+    <div class="section-header">
+        <span class="section-label">Journal</span>
+        <h2 class="section-title">Latest Stories</h2>
+        <p class="section-desc">Insights, guides, and updates from the Faraashi team</p>
+    </div>
+
+    {% if blogs %}
+    <div class="blog-grid">
+        {% for blog in blogs %}
+        <a href="/blog/{{ blog._id }}" class="blog-card">
+            <div class="blog-image">
+                <img src="{{ blog.image_url if blog.image_url else 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=600' }}"
+                     alt="{{ blog.title }}"
+                     onerror="this.src='https://via.placeholder.com/600x375?text=Blog'">
+            </div>
+            <div class="blog-body">
+                <span class="blog-tag">{{ blog.category }}</span>
+                <h3 class="blog-title">{{ blog.title }}</h3>
+                <div class="blog-meta">
+                    <span><i class="fa-solid fa-user"></i> {{ blog.author }}</span>
+                    <span><i class="fa-solid fa-calendar"></i> {{ blog.created_at }}</span>
+                </div>
+                <p class="blog-excerpt">{{ (blog.content[:120] if blog.content else '') }}...</p>
+                <span class="blog-read-more">Read article <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-newspaper"></i></div>
+        <h3>No stories yet</h3>
+        <p>Our journal is coming soon with exciting content.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="page-container" style="padding-top: 0;">
+    <div class="cta-banner">
+        <h2>Ready to start shopping?</h2>
+        <p>Join thousands of happy customers and discover premium products at honest prices.</p>
+        <a href="/products" class="btn btn-white btn-lg"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+    </div>
+</div>
+
+{% endblock %}

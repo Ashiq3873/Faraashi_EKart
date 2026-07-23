@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Checkout - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Checkout</h1>
+        <p>Complete your order details below</p>
+    </div>
+
+    <div class="checkout-layout">
+        <div>
+            <div class="form-card">
+                <div class="form-card-header">Shipping Information</div>
+                <div class="form-card-body">
+                    <form id="checkout-form" method="POST" action="/place_order">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="first_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-control" value="{{ session['user']['email'] if session.get('user') else '' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" name="phone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Shipping Address</label>
+                            <textarea name="address" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">City</label>
+                                <input type="text" name="city" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">PIN Code</label>
+                                <input type="text" name="pin_code" class="form-control" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <div class="form-card-header">Payment Method</div>
+                <div class="form-card-body">
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method_display" checked>
+                        <div>
+                            <strong><i class="fa-solid fa-money-bill-wave"></i> Cash on Delivery</strong>
+                            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 4px 0 0;">Pay when your order arrives</p>
+                        </div>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method_display">
+                        <div>
+                            <strong><i class="fa-solid fa-credit-card"></i> Pay Online</strong>
+                            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 4px 0 0;">Card, UPI, or net banking</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-summary">
+            <div class="order-summary-header">Order Summary</div>
+            <div class="order-summary-body">
+                {% for item in cart_items %}
+                <div class="summary-row">
+                    <span>{{ item.name }} <span style="color: var(--color-text-muted);">×{{ item.qty }}</span></span>
+                    <span>₹{{ (item.price * item.qty)|round(2) }}</span>
+                </div>
+                {% endfor %}
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>₹{{ total }}</span>
+                </div>
+            </div>
+            <div class="order-summary-footer">
+                <button type="submit" form="checkout-form" class="btn btn-primary btn-lg btn-block">
+                    <i class="fa-solid fa-lock"></i> Place Order
+                </button>
+                <p style="text-align: center; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 12px; margin-bottom: 0;">
+                    You'll receive a PDF invoice after placing your order
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Review Products - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="review-page-header">
+        <a href="{{ url_for('reviews_hub') }}" class="review-back-link"><i class="fa-solid fa-arrow-left"></i> Back to Reviews</a>
+        <h1>Product Reviews</h1>
+        <p>Select a product and share your complete experience with our team.</p>
+    </div>
+
+    {% if products %}
+    <div class="review-item-grid">
+        {% for p in products %}
+        <article class="review-item-card">
+            <div class="review-item-image product-tone">
+                <img src="{{ p.image_url }}" alt="{{ p.name }}" onerror="this.src='https://via.placeholder.com/320x220?text=Product'">
+            </div>
+            <div class="review-item-body">
+                <span class="review-item-tag">{{ p.category }}</span>
+                <h3>{{ p.name }}</h3>
+                <p class="review-item-meta">₹{{ p.price }} · Stock: {{ p.stock|default(0) }}</p>
+                <a href="{{ url_for('write_review', review_type='product', target_id=p._id) }}" class="btn btn-primary btn-block btn-sm">
+                    <i class="fa-solid fa-pen-to-square"></i> Write Review
+                </a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-box-open"></i></div>
+        <h3>No products available</h3>
+        <p>Products will appear here once added to the catalog.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

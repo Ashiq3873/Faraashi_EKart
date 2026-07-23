@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Your Cart - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Shopping Cart</h1>
+        <p>{% if cart %}{{ cart|length }} item{{ 's' if cart|length != 1 else '' }} in your cart{% else %}Your cart is empty{% endif %}</p>
+    </div>
+
+    {% if cart %}
+    <div class="cart-layout">
+        <div>
+            <div class="cart-table-wrap">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                        <tr>
+                            <td>
+                                <div class="cart-product">
+                                    <img src="{{ item.image_url }}" alt="{{ item.name }}" onerror="this.src='https://via.placeholder.com/64x64?text=No+Image'">
+                                    <span style="font-weight: 600;">{{ item.name }}</span>
+                                </div>
+                            </td>
+                            <td>₹{{ item.price }}</td>
+                            <td>
+                                <div class="qty-stepper" style="border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; display: inline-flex; align-items: center; background: var(--color-surface);">
+                                    <a href="{{ url_for('update_cart', pid=item._id, action='decrease') }}" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; color: var(--color-text); text-decoration: none; background: var(--color-bg); transition: var(--transition); border-right: 1px solid var(--color-border);" onmouseover="this.style.background='var(--color-accent-light)'; this.style.color='var(--color-accent)'" onmouseout="this.style.background='var(--color-bg)'; this.style.color='var(--color-text)'"><i class="fa-solid fa-minus" style="font-size: 0.75rem;"></i></a>
+                                    <span style="width: 36px; text-align: center; font-weight: 600; font-size: 0.9375rem;">{{ item.qty }}</span>
+                                    <a href="{{ url_for('update_cart', pid=item._id, action='increase') }}" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; color: var(--color-text); text-decoration: none; background: var(--color-bg); transition: var(--transition); border-left: 1px solid var(--color-border);" onmouseover="this.style.background='var(--color-accent-light)'; this.style.color='var(--color-accent)'" onmouseout="this.style.background='var(--color-bg)'; this.style.color='var(--color-text)'"><i class="fa-solid fa-plus" style="font-size: 0.75rem;"></i></a>
+                                </div>
+                            </td>
+                            <td style="font-weight: 700;">₹{{ (item.price * item.qty)|round(2) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="/products" class="btn btn-outline" style="margin-top: 20px;"><i class="fa-solid fa-arrow-left"></i> Continue Shopping</a>
+        </div>
+
+        <div class="order-summary">
+            <div class="order-summary-header">Order Summary</div>
+            <div class="order-summary-body">
+                {% if total < 999 %}
+                <p style="font-size: 0.8125rem; color: var(--color-text-secondary); margin-bottom: 8px;">
+                    Add <strong style="color: var(--color-accent);">₹{{ (999 - total)|round(2) }}</strong> more for free delivery
+                </p>
+                {% else %}
+                <p style="font-size: 0.8125rem; color: var(--color-success); margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i> Free delivery unlocked!</p>
+                {% endif %}
+                <div class="free-shipping-bar">
+                    <div class="free-shipping-fill" id="freeShippingFill" data-total="{{ total }}" data-threshold="999"></div>
+                </div>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>₹{{ total }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span>{{ 'Free' if total >= 999 else '₹49' }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>₹{{ total if total >= 999 else (total + 49)|round(2) }}</span>
+                </div>
+            </div>
+            <div class="order-summary-footer">
+                <a href="/checkout" class="btn btn-primary btn-lg btn-block">Proceed to Checkout</a>
+                <p style="text-align: center; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 12px; margin-bottom: 0;">
+                    <i class="fa-solid fa-lock"></i> Secure checkout · COD available
+                </p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added anything yet. Start exploring our collection.</p>
+        <a href="/products" class="btn btn-primary btn-lg">Browse Products</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+Flask==3.0.3
+pymongo==4.10.1
+dnspython==2.6.1
+cloudinary==1.40.0
+reportlab==4.2.5
+gunicorn==21.2.0
+openai==1.35.0          # or use xAI Grok SDK
+langchain==0.2.0
+langchain-openai
+langchain-community
+pymongo
+tiktoken

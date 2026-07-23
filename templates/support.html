@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+{% block title %}Support Center - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="support-wrapper">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="support-sidebar">
+            <div class="sidebar-header">
+                <h3>Support Hub</h3>
+                <p>How can we help you today?</p>
+            </div>
+            <nav class="support-nav">
+                <button class="support-tab-btn{% if tab == 'help' %} active{% endif %}" onclick="switchTab('help')">
+                    <i class="fa-solid fa-headset"></i> Help Center
+                </button>
+                <button class="support-tab-btn{% if tab == 'returns' %} active{% endif %}" onclick="switchTab('returns')">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> Returns Policy
+                </button>
+                <button class="support-tab-btn{% if tab == 'shipping' %} active{% endif %}" onclick="switchTab('shipping')">
+                    <i class="fa-solid fa-truck-ramp-box"></i> Shipping Info
+                </button>
+                <button class="support-tab-btn{% if tab == 'track' %} active{% endif %}" onclick="switchTab('track')">
+                    <i class="fa-solid fa-location-crosshairs"></i> Track Order
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="support-content-area">
+            
+            <!-- Help Center Tab -->
+            <div id="tab-help" class="support-tab-content{% if tab == 'help' %} active{% endif %}">
+                <div class="support-header-block">
+                    <h2>Help Center</h2>
+                    <p>Get in touch with our support representatives or browse frequently asked questions.</p>
+                </div>
+                
+                <!-- Customer Care Profile Cards -->
+                <div class="care-agents-grid">
+                    <div class="agent-card">
+                        <div class="agent-avatar">MA</div>
+                        <div class="agent-info">
+                            <h4>Mohamed Ashiq</h4>
+                            <span class="agent-role">Support Operations Lead</span>
+                            <p class="agent-desc">Specializes in billing inquiries, checkout issues, and order resolutions.</p>
+                            <a href="tel:+916385658696" class="agent-contact-btn"><i class="fa-solid fa-phone"></i> Call +91 6385658696</a>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-avatar"><i class="fa-solid fa-shop"></i></div>
+                        <div class="agent-info">
+                            <h4>Faraashi Care Desk</h4>
+                            <span class="agent-role">Customer Care Team</span>
+                            <p class="agent-desc">Handles general store inquiries, feedback, and catalog search questions.</p>
+                            <a href="mailto:mohamedashiqb12@gmail.com" class="agent-contact-btn"><i class="fa-solid fa-envelope"></i> Email Support</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call Center availability timings -->
+                <div class="timings-card">
+                    <div class="timings-icon"><i class="fa-solid fa-clock"></i></div>
+                    <div class="timings-body">
+                        <h4>Call & Chat Support Hours</h4>
+                        <p>Our phone line and live email response systems are fully operational between <strong>9:00 AM to 6:00 PM IST (Monday to Saturday)</strong>.</p>
+                        <p class="timings-note"><i class="fa-solid fa-circle-dot" style="color: var(--color-success); font-size: 0.75rem; margin-right: 4px;"></i> Timings are standard Indian Standard Time (IST). Feel free to shoot queries anytime; emails will be replied to within 2 hours during operational windows.</p>
+                    </div>
+                </div>
+
+                <!-- FAQs -->
+                <h3 style="margin-top: 32px; margin-bottom: 16px;">Frequently Asked Questions</h3>
+                <div class="faq-accordion">
+                    <details class="faq-item">
+                        <summary class="faq-question">How do I trace my delivery?</summary>
+                        <div class="faq-answer">
+                            <p>You can use the <strong>Track Order</strong> tab right next to this section. Simply sign in, select the order from your history, and view the live shipment stage updated directly by our fulfillment team.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">Can I pay on delivery?</summary>
+                        <div class="faq-answer">
+                            <p>Yes, we offer Cash on Delivery (COD) across all pincodes within India at no additional processing fees. Simply choose COD at checkout.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">How long does order fulfillment take?</summary>
+                        <div class="faq-answer">
+                            <p>We process all orders within 24 hours. The standard delivery window is 3-5 business days depending on your postal address.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Returns Policy Tab -->
+            <div id="tab-returns" class="support-tab-content{% if tab == 'returns' %} active{% endif %}">
+                <div class="support-header-block">
+                    <h2>Returns & Refund Policy</h2>
+                    <p>We believe in honest services. If you aren't completely satisfied with your order, we make returns straightforward.</p>
+                </div>
+                
+                <div class="policy-details">
+                    <div class="policy-hero-banner">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div>
+                            <h4>30-Day Money-Back Guarantee</h4>
+                            <p>No questions asked return on any unused item in its original brand box/condition.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 24px;">
+                        <h4>How to initiate a return:</h4>
+                        <ol class="step-list">
+                            <li>Keep the product packaging intact, containing tags and bills.</li>
+                            <li>Send a direct return request email to <a href="mailto:mohamedashiqb12@gmail.com">mohamedashiqb12@gmail.com</a> with your Order ID.</li>
+                            <li>Our support team will coordinate a pickup within 48 hours.</li>
+                            <li>Refunds are processed back to your bank account or payment source within 5 business days after inspection.</li>
+                        </ol>
+                    </div>
+
+                    <div class="timings-card" style="background: rgba(239, 68, 68, 0.04); border-color: rgba(239, 68, 68, 0.15); margin-top: 24px;">
+                        <div class="timings-icon" style="color: var(--color-danger);"><i class="fa-solid fa-circle-exclamation"></i></div>
+                        <div class="timings-body">
+                            <h4 style="color: var(--color-danger);">Non-Returnable Items</h4>
+                            <p style="font-size: 0.9375rem; color: var(--color-text-secondary);">Perishable food items, custom cosmetics, and inner garments cannot be returned due to hygiene and health regulations. Please review individual item details before checkout.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Info Tab -->
+            <div id="tab-shipping" class="support-tab-content{% if tab == 'shipping' %} active{% endif %}">
+                <div class="support-header-block">
+                    <h2>Shipping & Delivery Information</h2>
+                    <p>Get details on shipping speeds, locations covered, and pricing tier structures.</p>
+                </div>
+                
+                <div class="shipping-grid">
+                    <div class="shipping-card">
+                        <div class="ship-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                        <h4>Delivery Charges</h4>
+                        <p>Shipping is completely <strong>FREE</strong> for all orders above <strong>₹999</strong>.</p>
+                        <p>For orders below ₹999, a flat shipping and handling charge of <strong>₹49</strong> is applied at checkout.</p>
+                    </div>
+                    
+                    <div class="shipping-card">
+                        <div class="ship-icon"><i class="fa-solid fa-globe"></i></div>
+                        <h4>Transit Times</h4>
+                        <p><strong>Metro Areas:</strong> 2-3 Business Days</p>
+                        <p><strong>Other Regions:</strong> 3-5 Business Days</p>
+                        <p>Fulfillment operations run Monday through Friday.</p>
+                    </div>
+                </div>
+
+                <div class="timings-card" style="margin-top: 24px;">
+                    <div class="timings-icon"><i class="fa-solid fa-box"></i></div>
+                    <div class="timings-body">
+                        <h4>Safe Contactless Shipping</h4>
+                        <p>All logistics partners strictly adhere to safety and sanitary protocols. COD deliveries are handled with electronic payments if requested on your doorstep.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Track Order Tab -->
+            <div id="tab-track" class="support-tab-content{% if tab == 'track' %} active{% endif %}">
+                <div class="support-header-block">
+                    <h2>Track Your Shipments</h2>
+                    <p>View real-time delivery phases and details for your recent orders.</p>
+                </div>
+
+                {% if not session.get('user') %}
+                <!-- Sign in required state -->
+                <div class="auth-required-panel">
+                    <i class="fa-solid fa-lock"></i>
+                    <h3>Authentication Required</h3>
+                    <p>Please log in to your account to view your past purchases and track ongoing deliveries.</p>
+                    <a href="{{ url_for('login', next='/support?tab=track') }}" class="btn btn-primary">Sign In to Track</a>
+                </div>
+                {% else %}
+                    {% if not orders %}
+                    <!-- Empty orders state -->
+                    <div class="empty-state" style="padding: 40px 24px;">
+                        <div class="empty-state-icon"><i class="fa-solid fa-box-open"></i></div>
+                        <h3>No orders found</h3>
+                        <p>We couldn't find any orders placed under this account.</p>
+                        <a href="/products" class="btn btn-primary">Go to Shop</a>
+                    </div>
+                    {% else %}
+                    <!-- List of orders with tracking stepper -->
+                    <div class="orders-tracking-list">
+                        {% for o in orders %}
+                        <div class="tracking-order-card">
+                            <div class="tracking-card-header">
+                                <div>
+                                    <span class="order-label">Order ID:</span>
+                                    <span class="order-id-val">#{{ o._id.split('.')[0] }}</span>
+                                </div>
+                                <div class="order-meta-info">
+                                    <span>Placed on: {{ o['created_at']|format_datetime }}</span>
+                                    <span class="order-price-badge">₹{{ o.total|round(2) }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="tracking-card-body">
+                                
+                                <!-- Shipment Progress Indicator -->
+                                {% set status = o.get('status', 'C') %}
+                                <div class="stepper-progress-wrapper">
+                                    <div class="stepper-line">
+                                        <div class="stepper-line-fill" style="width: {% if status == 'C' %}0%{% elif status == 'P' %}33.3%{% elif status == 'S' %}66.6%{% elif status == 'D' %}100%{% endif %};"></div>
+                                    </div>
+                                    <div class="stepper-nodes">
+                                        <div class="step-node {% if status in ['C', 'P', 'S', 'D'] %}active{% endif %}">
+                                            <div class="step-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                                            <span class="step-label">Confirmed</span>
+                                        </div>
+                                        <div class="step-node {% if status in ['P', 'S', 'D'] %}active{% endif %}">
+                                            <div class="step-icon"><i class="fa-solid fa-box-archive"></i></div>
+                                            <span class="step-label">Packed</span>
+                                        </div>
+                                        <div class="step-node {% if status in ['S', 'D'] %}active{% endif %}">
+                                            <div class="step-icon"><i class="fa-solid fa-truck"></i></div>
+                                            <span class="step-label">Shipped</span>
+                                        </div>
+                                        <div class="step-node {% if status == 'D' %}active{% endif %}">
+                                            <div class="step-icon"><i class="fa-solid fa-house-chimney-user"></i></div>
+                                            <span class="step-label">Delivered</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Details Details Summary -->
+                                <details class="tracking-items-details">
+                                    <summary>View details & items ({{ o['items']|length }})</summary>
+                                    <div class="tracking-items-dropdown">
+                                        <div class="customer-ship-address">
+                                            <strong>Shipping To:</strong> {{ o.customer_name }} | {{ o.phone }}<br/>
+                                            {{ o.address }}
+                                        </div>
+                                        <table class="tracking-items-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Item</th>
+                                                    <th style="text-align: center;">Qty</th>
+                                                    <th style="text-align: right;">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in o['items'] %}
+                                                <tr>
+                                                    <td>{{ item.name }}</td>
+                                                    <td style="text-align: center;">{{ item.qty }}</td>
+                                                    <td style="text-align: right;">₹{{ item.price }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <div class="invoice-btn-wrap" style="margin-top: 12px; text-align: right; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
+                                            <a href="{{ url_for('download_invoice', order_id=o._id) }}" class="btn btn-outline btn-sm">
+                                                <i class="fa-solid fa-file-invoice-dollar"></i> Download Invoice
+                                            </a>
+                                            {% if status == 'D' %}
+                                            <a href="{{ url_for('delete_order', order_id=o._id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Remove this delivered order from your history?');">
+                                                <i class="fa-solid fa-trash-can"></i> Delete Order
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+        </main>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    function switchTab(tabId) {
+        // Remove active class from all buttons and panels
+        document.querySelectorAll('.support-tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.support-tab-content').forEach(content => content.classList.remove('active'));
+        
+        // Find targeted button and panel
+        const targetBtn = Array.from(document.querySelectorAll('.support-tab-btn')).find(btn => btn.getAttribute('onclick').includes(`'${tabId}'`));
+        const targetContent = document.getElementById(`tab-${tabId}`);
+        
+        if (targetBtn && targetContent) {
+            targetBtn.classList.add('active');
+            targetContent.classList.add('active');
+        }
+        
+        // Update URL state silently
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('tab', tabId);
+        window.history.replaceState({}, '', newUrl);
+    }
+</script>
+{% endblock %}
+{% endblock %}

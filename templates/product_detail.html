@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <nav class="breadcrumb-nav">
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+        <a href="/products">Shop</a>
+        <span class="sep">/</span>
+        <a href="/products?category={{ product.category }}">{{ product.category }}</a>
+        <span class="sep">/</span>
+        <span>{{ product.name }}</span>
+    </nav>
+
+    <div class="product-detail-grid">
+        <div class="product-gallery">
+            {% if product.compare_price and product.compare_price > product.price %}
+            <span class="product-badge" style="top:16px;left:16px;">{{ (100 - (product.price / product.compare_price * 100))|round|int }}% OFF</span>
+            {% endif %}
+            <button class="wishlist-btn" data-product-id="{{ product._id }}" aria-label="Add to wishlist" style="top:16px;right:16px;"><i class="fa-regular fa-heart"></i></button>
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
+        </div>
+
+        <div class="product-info">
+            <span class="product-category">{{ product.category }}</span>
+            <h1>{{ product.name }}</h1>
+
+            <div class="product-rating" style="margin-bottom: 16px;">
+                <span class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></span>
+                <span class="count">24 ratings</span>
+            </div>
+
+            <div class="product-price-row" style="margin-bottom: 4px;">
+                <span class="price-current" style="font-size: 2rem;">₹{{ product.price }}</span>
+                {% if product.compare_price and product.compare_price > product.price %}
+                <span class="price-original" style="font-size: 1.125rem;">₹{{ product.compare_price }}</span>
+                <span class="price-save" style="font-size: 0.875rem;">Save ₹{{ (product.compare_price - product.price)|round|int }}</span>
+                {% endif %}
+            </div>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 20px;">Inclusive of all taxes</p>
+
+            {% if product.stock is defined %}
+                {% if product.stock > 5 %}
+                <div class="stock-status stock-in" style="font-size: 0.875rem; margin-bottom: 24px;"><i class="fa-solid fa-circle-check"></i> In Stock ({{ product.stock }} units available)</div>
+                {% elif product.stock > 0 %}
+                <div class="stock-status stock-low" style="font-size: 0.875rem; margin-bottom: 24px;"><i class="fa-solid fa-bolt"></i> Only {{ product.stock }} left — order soon!</div>
+                {% else %}
+                <div class="stock-status stock-out" style="font-size: 0.875rem; margin-bottom: 24px;"><i class="fa-solid fa-circle-xmark"></i> Out of Stock</div>
+                {% endif %}
+            {% endif %}
+
+            <div style="border-top: 1px solid var(--color-border); padding-top: 24px; margin-bottom: 24px;">
+                <h5 style="margin-bottom: 12px;">Description</h5>
+                <p style="color: var(--color-text-secondary); line-height: 1.7;">{{ product.description }}</p>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                <div class="qty-stepper">
+                    <button type="button" class="qty-minus">−</button>
+                    <input type="number" value="1" min="1" max="{{ product.stock if product.stock is defined else 99 }}" data-max="{{ product.stock if product.stock is defined else 99 }}">
+                    <button type="button" class="qty-plus">+</button>
+                </div>
+                <a href="/add_to_cart/{{ product._id }}" class="btn btn-primary btn-lg add-to-cart" style="flex: 1;">
+                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                </a>
+            </div>
+
+            <a href="/products" class="btn btn-outline" style="margin-top: 16px;"><i class="fa-solid fa-arrow-left"></i> Back to Shop</a>
+
+            <div class="trust-badges">
+                <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Secure Payment</div>
+                <div class="trust-badge"><i class="fa-solid fa-truck-fast"></i> Fast Delivery</div>
+                <div class="trust-badge"><i class="fa-solid fa-rotate-left"></i> Easy Returns</div>
+                <div class="trust-badge"><i class="fa-solid fa-headset"></i> 24/7 Support</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
