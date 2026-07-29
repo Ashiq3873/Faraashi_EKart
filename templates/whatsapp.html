@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}WhatsApp Support - Faraashi Ekart{% endblock %}
+
+{% block content %}
+<div class="page-container" style="min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+    <h1 style="margin-bottom: 16px; color: #0f172a;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> WhatsApp Support</h1>
+    <p style="color: #64748b; margin-bottom: 32px; max-width: 600px;">
+        Click the widget below to start a direct chat with our support team. We're here to help you with your orders, products, and any other inquiries!
+    </p>
+    
+    <div style="background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 500px; display: flex; justify-content: center;">
+        <!-- Elfsight WhatsApp Chat | Untitled WhatsApp Chat -->
+        <script src="https://elfsightcdn.com/platform.js" async></script>
+        <div class="elfsight-app-3fbc78d3-a552-4319-babd-301c0878dcd7" data-elfsight-app-lazy></div>
+    </div>
+</div>
+{% endblock %}

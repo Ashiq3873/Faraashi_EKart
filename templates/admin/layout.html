@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Admin Control Panel - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <nav class="admin-sidebar-nav">
+            <a href="/admin" class="admin-nav-item {% if request.path == '/admin' %}active{% endif %}">
+                <i class="fa-solid fa-chart-line"></i> Dashboard
+            </a>
+            <a href="/admin/products/add" class="admin-nav-item {% if request.path == '/admin/products/add' %}active{% endif %}">
+                <i class="fa-solid fa-circle-plus"></i> Add Product
+            </a>
+            <a href="/admin/blogs/add" class="admin-nav-item {% if request.path == '/admin/blogs/add' %}active{% endif %}">
+                <i class="fa-solid fa-pen-nib"></i> Publish Blog
+            </a>
+            <a href="/admin/inventory" class="admin-nav-item {% if request.path == '/admin/inventory' %}active{% endif %}">
+                <i class="fa-solid fa-warehouse"></i> Inventory
+            </a>
+            <a href="/admin/orders" class="admin-nav-item {% if request.path == '/admin/orders' %}active{% endif %}">
+                <i class="fa-solid fa-receipt"></i> Orders
+            </a>
+            <a href="/admin/reviews" class="admin-nav-item {% if request.path == '/admin/reviews' %}active{% endif %}">
+                <i class="fa-solid fa-comments"></i> Reviews
+            </a>
+            <a href="/admin/blogs_archive" class="admin-nav-item {% if request.path == '/admin/blogs_archive' %}active{% endif %}">
+                <i class="fa-solid fa-book-open"></i> Blogs Archive
+            </a>
+        </nav>
+    </aside>
+    <main class="admin-layout-main">
+        <header class="admin-topbar" style="margin-bottom: 32px;">
+            <div class="admin-topbar-main">
+                <span class="admin-badge"><i class="fa-solid fa-shield-halved"></i> Administration</span>
+                <h1>{% block page_title %}Control Panel{% endblock %}</h1>
+            </div>
+            <div class="admin-topbar-actions">
+                <div class="admin-meta-chip">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{ now|format_datetime }}</span>
+                </div>
+            </div>
+        </header>
+        
+        {% block admin_content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}

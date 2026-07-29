@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Journal - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="section-header">
+        <span class="section-label">Journal</span>
+        <h1 class="section-title">Stories & Insights</h1>
+        <p class="section-desc">Guides, tips, and updates from the Faraashi team</p>
+    </div>
+
+    {% if blogs %}
+    <div class="blog-grid">
+        {% for blog in blogs %}
+        <a href="/blog/{{ blog._id }}" class="blog-card">
+            <div class="blog-image">
+                <img src="{{ blog.image_url if blog.image_url else 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=600' }}"
+                     alt="{{ blog.title }}"
+                     onerror="this.src='https://via.placeholder.com/600x375?text=Blog'">
+            </div>
+            <div class="blog-body">
+                <span class="blog-tag">{{ blog.category }}</span>
+                <h3 class="blog-title">{{ blog.title }}</h3>
+                <div class="blog-meta">
+                    <span><i class="fa-solid fa-user"></i> {{ blog.author }}</span>
+                    <span><i class="fa-solid fa-calendar"></i> {{ blog.created_at }}</span>
+                </div>
+                <p class="blog-excerpt">{{ (blog.content[:150] if blog.content else '') }}...</p>
+                <span class="blog-read-more">Read article <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-newspaper"></i></div>
+        <h3>No articles yet</h3>
+        <p>Check back soon for exciting content from our team.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'admin/layout.html' %}
+{% block page_title %}Dashboard Overview{% endblock %}
+{% block admin_content %}
+    <section class="admin-stats">
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon accent"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ products|length }}</div>
+                <div class="admin-stat-label">Total Products</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ low_stock_count }}</div>
+                <div class="admin-stat-label">Low Stock (≤ 5)</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon danger"><i class="fa-solid fa-ban"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ out_of_stock_count }}</div>
+                <div class="admin-stat-label">Out of Stock</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon info"><i class="fa-solid fa-truck-fast"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ pending_orders }}</div>
+                <div class="admin-stat-label">Active Orders</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon success"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">₹{{ total_revenue|round(0)|int }}</div>
+                <div class="admin-stat-label">Total Revenue</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon neutral"><i class="fa-solid fa-newspaper"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ blogs|length }}</div>
+                <div class="admin-stat-label">Published Blogs</div>
+            </div>
+        </article>
+        <article class="admin-stat-card">
+            <div class="admin-stat-icon accent"><i class="fa-solid fa-robot"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">{{ reviews|length }}</div>
+                <div class="admin-stat-label">AI Review Replies</div>
+            </div>
+        </article>
+    </section>
+{% endblock %}

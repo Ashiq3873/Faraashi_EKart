@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Write Review - {{ target_name }}{% endblock %}
+{% block content %}
+<div class="page-container">
+    <div class="review-page-header">
+        <a href="{{ url_for('review_products' if review_type == 'product' else 'review_blogs') }}" class="review-back-link">
+            <i class="fa-solid fa-arrow-left"></i> Back to {{ 'Products' if review_type == 'product' else 'Blogs' }}
+        </a>
+        <h1>Write Your Review</h1>
+        <p>Share your honest feedback about <strong>{{ target_name }}</strong>.</p>
+    </div>
+
+    <div class="review-write-layout">
+        <aside class="review-target-panel {{ 'product-tone' if review_type == 'product' else 'blog-tone' }}">
+            <span class="review-target-type">{{ review_type|title }} Review</span>
+            {% if review_type == 'product' %}
+            <img src="{{ target.image_url }}" alt="{{ target_name }}" onerror="this.src='https://via.placeholder.com/400x300?text=Product'">
+            <h3>{{ target.name }}</h3>
+            <p>{{ target.category }} · ₹{{ target.price }}</p>
+            {% else %}
+            <img src="{{ target.image_url if target.image_url else 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=600' }}"
+                 alt="{{ target_name }}"
+                 onerror="this.src='https://via.placeholder.com/400x300?text=Blog'">
+            <h3>{{ target.title }}</h3>
+            <p>{{ target.category }} · {{ target.author }}</p>
+            {% endif %}
+        </aside>
+
+        <section class="review-form-panel">
+            <form method="POST" class="review-form">
+                <div class="form-group">
+                    <label class="form-label">How do you feel about this {{ review_type }}?</label>
+                    <div class="expression-grid">
+                        {% for key, label in review_expressions.items() %}
+                        <label class="expression-option expr-{{ key }}">
+                            <input type="radio" name="expression" value="{{ key }}" required>
+                            <span>{{ label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="review_text">Your Complete Review</label>
+                    <textarea id="review_text" name="review_text" class="form-control" rows="8"
+                              placeholder="Describe your experience in detail — quality, delivery, value, readability, or anything you'd like our team to know..."
+                              required minlength="20"></textarea>
+                    <small class="form-hint">Minimum 20 characters. Be specific so we can respond thoughtfully.</small>
+                </div>
+
+                <div class="review-form-footer">
+                    <p><i class="fa-solid fa-robot"></i> An AI reply will be generated from your expression and sent to <strong>{{ session['user']['email'] }}</strong> instantly.</p>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Review
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+{% endblock %}

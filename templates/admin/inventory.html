@@ -1,0 +1,79 @@
+{% extends 'admin/layout.html' %}
+{% block page_title %}Inventory Management{% endblock %}
+{% block admin_content %}
+<section class="admin-section">
+    <div class="admin-section-header">
+        <div>
+            <h2><i class="fa-solid fa-warehouse"></i> Inventory Management</h2>
+            <p>Live stock levels update automatically when customers complete purchases.</p>
+        </div>
+        <span class="admin-count-badge">{{ products|length }} items</span>
+    </div>
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock Level</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in products %}
+                {% set stock = p.stock|default(0)|int %}
+                <tr>
+                    <td>
+                        <div class="admin-product-cell">
+                            {% set media = p|product_media %}
+                            {% if media and media[0].type == 'video' %}
+                                <video src="{{ media[0].url }}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 6px;"></video>
+                            {% else %}
+                                <img src="{{ p|product_cover }}" alt="{{ p.name }}" onerror="this.src='https://via.placeholder.com/48x48?text=N/A'">
+                            {% endif %}
+                            <div>
+                                <strong>{{ p.name }}</strong>
+                                <span class="admin-product-id">ID: {{ p._id|string|truncate(12, True, '') }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="tag">{{ p.category }}</span></td>
+                    <td><strong>₹{{ p.price }}</strong></td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div>
+                                <span class="stock-qty {% if stock <= 0 %}is-out{% elif stock <= 5 %}is-low{% else %}is-ok{% endif %}">{{ stock }}</span>
+                                <span class="stock-unit">units</span>
+                            </div>
+                            <form action="/admin/update_stock/{{ p._id }}" method="POST" style="display:flex; gap:4px; margin:0;">
+                                <input type="number" name="add_stock" min="1" placeholder="+Qty" style="width: 60px; padding: 4px 6px; font-size: 0.75rem; border: 1px solid var(--color-border); border-radius: 4px;" required>
+                                <button type="submit" class="btn btn-sm btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">Add</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        {% if stock <= 0 %}
+                        <span class="stock-status-pill out">Out of Stock</span>
+                        {% elif stock <= 5 %}
+                        <span class="stock-status-pill low">Low Stock</span>
+                        {% else %}
+                        <span class="stock-status-pill ok">In Stock</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/admin/delete_product/{{ p._id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this product from catalog?');">
+                            <i class="fa-solid fa-trash-can"></i> Remove
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not products %}
+                <tr><td colspan="6" class="admin-empty-row">No products in inventory.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

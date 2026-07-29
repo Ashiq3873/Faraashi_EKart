@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}{{ blog.title }} - Faraashi-Ekart{% endblock %}
+{% block content %}
+<div class="page-container">
+    <nav class="breadcrumb-nav">
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+        <a href="/blogs">Journal</a>
+        <span class="sep">/</span>
+        <span>{{ blog.title }}</span>
+    </nav>
+
+    <div class="blog-detail-hero">
+        <img src="{{ blog.image_url if blog.image_url else 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200' }}"
+             alt="{{ blog.title }}"
+             onerror="this.src='https://via.placeholder.com/1200x420?text=Blog'">
+    </div>
+
+    <article class="blog-detail-content">
+        <span class="blog-tag">{{ blog.category }}</span>
+        <h1>{{ blog.title }}</h1>
+
+        <div class="blog-detail-meta">
+            <span><i class="fa-solid fa-user"></i> By {{ blog.author }}</span>
+            <span><i class="fa-solid fa-calendar"></i> {{ blog.created_at }}</span>
+            <span><i class="fa-solid fa-clock"></i> {{ ((blog.content|striptags).split()|length / 200)|round(0, 'ceil')|int if blog.content else 1 }} min read</span>
+        </div>
+
+        <div class="blog-content-body">
+            {% if blog.content %}
+            {{ blog.content }}
+            {% else %}
+            <p>No content available for this article.</p>
+            {% endif %}
+        </div>
+
+        <div class="share-buttons">
+            <span style="font-size: 0.875rem; color: var(--color-text-secondary); margin-right: 8px;">Share:</span>
+            <a href="https://twitter.com/intent/tweet?text={{ blog.title|urlencode }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url|urlencode }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+            <a href="mailto:?subject={{ blog.title|urlencode }}&body={{ request.url|urlencode }}" class="btn btn-outline btn-sm"><i class="fa-solid fa-envelope"></i> Email</a>
+        </div>
+
+        <div style="margin-top: 48px;">
+            <a href="/blogs" class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i> Back to Journal</a>
+        </div>
+    </article>
+</div>
+{% endblock %}

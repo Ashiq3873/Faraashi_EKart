@@ -1,0 +1,67 @@
+{% extends 'admin/layout.html' %}
+{% block page_title %}Customer Reviews{% endblock %}
+{% block admin_content %}
+<section class="admin-section" id="customer-reviews">
+    <div class="admin-section-header">
+        <div>
+            <h2><i class="fa-solid fa-comments"></i> Customer Reviews</h2>
+            <p>AI automatically replies to each review based on customer expression and emails the user instantly.</p>
+        </div>
+        <span class="admin-count-badge">{{ reviews|length }} total · AI handled</span>
+    </div>
+
+    {% if reviews %}
+    <div class="admin-reviews-list">
+        {% for r in reviews %}
+        <article class="admin-review-card {% if r.get('status') == 'replied' %}is-replied{% else %}is-pending{% endif %}">
+            <div class="admin-review-header">
+                <div>
+                    <span class="review-type-badge {{ r.review_type }}">{{ r.review_type|title }}</span>
+                    <h3>{{ r.target_name }}</h3>
+                    <p class="admin-review-meta">
+                        <strong>{{ r.user_name }}</strong> · {{ r.user_email }} · {{ r.created_at|format_datetime }}
+                    </p>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    {% if r.get('status') == 'replied' %}
+                    <span class="review-status-pill replied"><i class="fa-solid fa-robot"></i> AI Replied</span>
+                    {% else %}
+                    <span class="review-status-pill pending">Email Pending</span>
+                    {% endif %}
+                    
+                    {% if r.get('screen') %}
+                    <a href="/admin/review_screen/{{ r._id }}/off" class="btn btn-sm btn-warning" title="Screen Off"><i class="fa-solid fa-eye-slash"></i> Screen off</a>
+                    {% else %}
+                    <a href="/admin/review_screen/{{ r._id }}/on" class="btn btn-sm btn-success" title="Screen"><i class="fa-solid fa-eye"></i> Screen</a>
+                    {% endif %}
+                    
+                    <a href="/admin/delete_review/{{ r._id }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this review?');" title="Delete Review"><i class="fa-solid fa-trash-can"></i></a>
+                </div>
+            </div>
+
+            <div class="admin-review-expression expr-{{ r.expression }}">
+                <i class="fa-solid fa-face-smile"></i> {{ r.expression_label }}
+            </div>
+
+            <div class="admin-review-text">
+                <strong>Customer Review</strong>
+                <p>{{ r.review_text }}</p>
+            </div>
+
+            <div class="admin-review-reply-box">
+                <strong><i class="fa-solid fa-robot"></i> AI Auto-Reply {% if r.get('email_sent') %}(emailed to customer){% else %}(email failed){% endif %}</strong>
+                <p>{{ r.ai_reply or r.admin_reply or 'No reply generated.' }}</p>
+                {% if r.replied_at %}
+                <span class="admin-reply-time">Generated on {{ r.replied_at|format_datetime }}</span>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="admin-table-wrap">
+        <div class="admin-empty-row">No customer reviews received yet.</div>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

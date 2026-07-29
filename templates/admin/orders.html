@@ -1,0 +1,83 @@
+{% extends 'admin/layout.html' %}
+{% block page_title %}Order Fulfillment{% endblock %}
+{% block admin_content %}
+<section class="admin-section">
+    <div class="admin-section-header">
+        <div>
+            <h2><i class="fa-solid fa-receipt"></i> Order Fulfillment</h2>
+            <p>Track shipment stages and manage completed deliveries.</p>
+        </div>
+        <span class="admin-count-badge">{{ orders|length }} orders</span>
+    </div>
+    <div class="admin-table-wrap">
+        <table class="admin-table admin-orders-table">
+            <thead>
+                <tr>
+                    <th>Order Reference</th>
+                    <th>Customer</th>
+                    <th>Date & Amount</th>
+                    <th>Status</th>
+                    <th>Fulfillment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in orders %}
+                {% set st = o.get('status', 'C') %}
+                <tr>
+                    <td>
+                        <strong class="order-ref">#{{ o._id.split('.')[0] }}</strong>
+                        <details class="admin-order-details">
+                            <summary>View {{ o['items']|length }} item(s)</summary>
+                            <ul>
+                                {% for item in o['items'] %}
+                                <li>{{ item.name }} × {{ item.qty }} — ₹{{ item.price }}</li>
+                                {% endfor %}
+                            </ul>
+                        </details>
+                    </td>
+                    <td>
+                        <div class="admin-customer-cell">
+                            <strong>{{ o.customer_name }}</strong>
+                            <span>{{ o.phone }}</span>
+                            <span class="admin-address">{{ o.address }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="admin-order-date">{{ o['created_at']|format_datetime }}</span>
+                        <strong class="admin-order-total">₹{{ o.total|round(2) }}</strong>
+                    </td>
+                    <td>
+                        {% if st == 'C' %}
+                        <span class="order-status-pill confirmed">Confirmed</span>
+                        {% elif st == 'P' %}
+                        <span class="order-status-pill packed">Packed</span>
+                        {% elif st == 'S' %}
+                        <span class="order-status-pill shipped">Shipped</span>
+                        {% elif st == 'D' %}
+                        <span class="order-status-pill delivered">Delivered</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if st == 'D' %}
+                        <a href="{{ url_for('admin_delete_order', order_id=o._id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this delivered order record?');">
+                            <i class="fa-solid fa-trash-can"></i> Delete
+                        </a>
+                        {% else %}
+                        <div class="status-btn-group">
+                            <a href="/admin/update_order_status/{{ o._id }}/C" class="status-letter-btn {% if st == 'C' %}active{% endif %}" title="Confirmed">C</a>
+                            <a href="/admin/update_order_status/{{ o._id }}/P" class="status-letter-btn {% if st == 'P' %}active{% endif %}" title="Packed">P</a>
+                            <a href="/admin/update_order_status/{{ o._id }}/S" class="status-letter-btn {% if st == 'S' %}active{% endif %}" title="Shipped">S</a>
+                            <a href="/admin/update_order_status/{{ o._id }}/D" class="status-letter-btn {% if st == 'D' %}active{% endif %}" title="Delivered">D</a>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not orders %}
+                <tr><td colspan="5" class="admin-empty-row">No customer orders yet.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

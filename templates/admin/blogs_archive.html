@@ -1,0 +1,44 @@
+{% extends 'admin/layout.html' %}
+{% block page_title %}Blog Archive{% endblock %}
+{% block admin_content %}
+<section class="admin-section">
+    <div class="admin-section-header">
+        <div>
+            <h2><i class="fa-solid fa-book-open"></i> Blog Archive</h2>
+            <p>Manage published articles and editorial content.</p>
+        </div>
+        <span class="admin-count-badge">{{ blogs|length }} articles</span>
+    </div>
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Published</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for blog in blogs %}
+                <tr>
+                    <td><img src="{{ blog.image_url if blog.image_url else 'https://via.placeholder.com/44x44?text=N/A' }}" alt="{{ blog.title }}" onerror="this.src='https://via.placeholder.com/44x44?text=N/A'"></td>
+                    <td><strong>{{ blog.title }}</strong></td>
+                    <td><span class="tag">{{ blog.category }}</span></td>
+                    <td>{{ blog.created_at }}</td>
+                    <td>
+                        <a href="/admin/delete_blog/{{ blog._id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this blog article?');">
+                            <i class="fa-solid fa-trash-can"></i> Remove
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not blogs %}
+                <tr><td colspan="5" class="admin-empty-row">No blog articles published.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
